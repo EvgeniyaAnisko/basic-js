@@ -16,27 +16,26 @@ const { NotImplementedError } = require('../extensions/index.js');
 function transform(arr) {
   // if (!arr.isArray)
   //   return '\'arr\' parameter must be an instance of the Array!'
-  
+  if (!Array.isArray(arr)) throw new Error(`'arr' parameter must be an instance of the Array!`);
   let result = []
 
   for (let i = 0; i< arr.length; i++){
-    if (!arr[i])
-    break
-     if (arr[i] === '--discard-prev' && result.length!==0)
+    // if (!arr[i])
+    // break
+    
+     if (arr[i] === '--discard-prev' && i!==0)
       result.pop()
-      else if (arr[i] === '--discard-prev' && result.length===0)
+      else if (arr[i] === '--discard-prev' && (result.length===0 || result[result.length-1]!==arr[i-1]))
       break
       else if (arr[i] === '--discard-next')
       i++
-      else if (arr[i] === '--double-next' && i!== arr.length-1 )
+      else if (arr[i] === '--double-next' && arr[i+1])
       result.push(arr[i+1])
       else if (arr[i] === '--double-next' && i=== arr.length-1 )
       break
-      else if (arr[i] === '--double-prev' && i!== arr.length-1){
-        if(arr[i-1]===result[result.length-1])
+      else if (arr[i] === '--double-prev' && i!== 0 )
           result.push(arr[i-1])
-      }
-      else if (arr[i] === '--double-prev' && i=== arr.length-1)
+      else if (arr[i] === '--double-prev')
       break
       else
       result.push(arr[i])
